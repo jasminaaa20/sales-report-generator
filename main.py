@@ -100,21 +100,31 @@ class PDFReportGenerator:
         doc = SimpleDocTemplate(self.output_filename, pagesize=letter)
         elements = []
 
-        # Add the company logo if available.
+        # Create the header with logo and title in one row.
+        header_data = []
+        # Prepare the logo cell.
         if self.logo_path and os.path.exists(self.logo_path):
             try:
-                # Adjust width and height as needed.
                 logo = Image(self.logo_path, width=100, height=50)
-                elements.append(logo)
             except Exception as e:
                 print(f"Error loading logo: {e}")
-
-        # Add some space after the logo.
-        elements.append(Spacer(1, 12))
-
-        # Add the title.
+                logo = Paragraph("", self.styles["Normal"])
+        else:
+            logo = Paragraph("", self.styles["Normal"])
+        
+        # Prepare the title cell.
         title_paragraph = Paragraph(self.title, self.styles["Title"])
-        elements.append(title_paragraph)
+        
+        # Combine them into a row.
+        header_data.append([logo, title_paragraph])
+        
+        # Create a table for the header.
+        header_table = Table(header_data, colWidths=[110, 400])
+        header_table.setStyle(TableStyle([
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+            ("ALIGN", (1, 0), (1, 0), "CENTER")
+        ]))
+        elements.append(header_table)
         elements.append(Spacer(1, 24))
 
         # Prepare table data with header.
