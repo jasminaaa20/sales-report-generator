@@ -12,12 +12,9 @@ from reportlab.platypus import (
 from reportlab.lib.styles import getSampleStyleSheet
 from dataclasses import dataclass
 
-@dataclass
-class ProductSale:
-    product: str
-    quantity: int
-    price: float
-    revenue: float
+from data import ProductSale
+
+
 
 # SalesDataProcessor remains the same
 class SalesDataProcessor:
@@ -52,6 +49,8 @@ class SalesDataProcessor:
         """
         data_list = []
         total = 0
+
+        product_items = self.sales_data.items()
 
         for product, info in self.sales_data.items():
             try:
