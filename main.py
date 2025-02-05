@@ -14,7 +14,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 class SalesDataProcessor:
     """
     Class to process sales data.
-    
+
     This class calculates the revenue for each product,
     sorts the products by revenue (descending order),
     and computes the total revenue.
@@ -171,6 +171,81 @@ class PDFReportGenerator:
             print(f"Error generating PDF: {e}")
 
 
+class ExcelReportGenerator:
+    """
+    Class to export sales data to an Excel file.
+
+    The Excel file will include a title, a table of sorted sales data,
+    and a summary row for the total revenue.
+    """
+    def __init__(self, output_filename: str, title: str = "Sales Report 2024"):
+        """
+        Initialize the Excel report generator with an output filename and title.
+
+        Args:
+            output_filename (str): The filename for the generated Excel file.
+            title (str): Title of the sales report.
+        """
+        self.output_filename = output_filename
+        self.title = title
+
+    def generate_report(self, sorted_data, total_revenue):
+        """
+        Generate the Excel report using the processed sales data.
+
+        Args:
+            sorted_data (list of dict): List of processed sales data.
+            total_revenue (float): Total revenue to display in the summary.
+        """
+        try:
+            from openpyxl import Workbook
+            from openpyxl.styles import Font, Alignment
+        except ImportError:
+            print("Please install openpyxl to export data to Excel: pip install openpyxl")
+            return
+
+        # Create a new workbook and select the active worksheet.
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Sales Data"
+
+        # Write the report title in the first row and merge cells A1:D1.
+        ws.merge_cells("A1:D1")
+        title_cell = ws["A1"]
+        title_cell.value = self.title
+        title_cell.font = Font(size=16, bold=True)
+        title_cell.alignment = Alignment(horizontal="center")
+
+        # Leave a blank row (row 2) and add table headers in row 3.
+        headers = ["Product", "Quantity", "Price ($)", "Revenue ($)"]
+        ws.append([])  # Row 2 (empty)
+        ws.append(headers)  # Row 3
+
+        # Write each product's data to the worksheet.
+        for item in sorted_data:
+            ws.append([
+                item["product"],
+                item["quantity"],
+                f"{item['price']:.2f}",
+                f"{item['revenue']:.2f}"
+            ])
+
+        # Append the summary row with total revenue.
+        ws.append(["Total Revenue:", "", "", f"{total_revenue:.2f}"])
+
+        # Optionally, style the header row (row 3) to be bold.
+        header_font = Font(bold=True)
+        for cell in ws[3]:
+            cell.font = header_font
+
+        # Save the workbook to the specified file.
+        try:
+            wb.save(self.output_filename)
+            print(f"Excel report generated successfully: {self.output_filename}")
+        except Exception as e:
+            print(f"Error generating Excel report: {e}")
+
+
 if __name__ == "__main__":
     # Define the sample sales data.
     sales_data = {
@@ -185,10 +260,15 @@ if __name__ == "__main__":
     processor = SalesDataProcessor(sales_data)
     sorted_data, total_revenue = processor.process_data()
 
-    # Define the output PDF filename and company logo image path.
+    # Define the output filenames and logo image path.
     output_pdf = "sales_report.pdf"
+    output_excel = "sales_report.xlsx"
     logo_image = "company_logo.png"  # Update the path as needed or set to None if not available.
 
     # Generate the PDF report.
     pdf_generator = PDFReportGenerator(output_pdf, logo_image, "Sales Report 2024")
     pdf_generator.generate_report(sorted_data, total_revenue)
+
+    # Generate the Excel report.
+    excel_generator = ExcelReportGenerator(output_excel, "Sales Report 2024")
+    excel_generator.generate_report(sorted_data, total_revenue)
