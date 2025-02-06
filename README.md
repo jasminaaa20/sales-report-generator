@@ -26,8 +26,8 @@ This project demonstrates the use of Python classes, data structures (lists and 
 ### 1. Clone the Repository
 Clone the GitHub repository to your local machine:
 ```bash
-git clone https://github.com/yourusername/sales-report-pdf-generator.git
-cd sales-report-pdf-generator
+git clone https://github.com/jasminaaa20/sales-report-generator.git
+cd sales-report-generator
 ```
 
 ### 2. Create a Virtual Environment
@@ -82,22 +82,3 @@ This project is licensed under the [MIT License](LICENSE).
 ## Acknowledgements
 - [ReportLab](https://www.reportlab.com/) for the powerful PDF generation library.
 - [Matplotlib](https://matplotlib.org/) (planned) for future chart integration.
-```
-
----
-
-### Notes:
-- **GitHub Repository:**  
-  Replace `https://github.com/yourusername/sales-report-pdf-generator.git` with the actual URL of your GitHub repository.
-
-- **requirements.txt:**  
-  Ensure your `requirements.txt` file includes at least:
-  ```plaintext
-  reportlab
-  ```
-  If you later add dependencies such as `matplotlib` or `pandas`, update the file accordingly.
-
-- **Company Logo:**  
-  If you have a company logo, ensure it's placed in the project folder (or adjust the path in the script).
-
-This `README.md` provides clear instructions on setting up the environment, installing dependencies, running the project, and outlines the project structure and future plans. Feel free to adjust and expand it as your project evolves.
